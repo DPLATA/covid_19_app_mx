@@ -88,7 +88,7 @@ class SimScreen extends StatelessWidget {
                 color: Colors.white
             ),
             onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MapSampleState()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => InfoScreen()));
             },
           )
         ],
@@ -102,6 +102,9 @@ class SimScreen extends StatelessWidget {
 }
 
 class MapScreen extends StatelessWidget {
+  Completer<GoogleMapController> _controller = Completer();
+  static final CameraPosition _myLocation =
+  CameraPosition(target: LatLng(0, 0),);
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -115,15 +118,22 @@ class MapScreen extends StatelessWidget {
                 color: Colors.white
             ),
             onPressed: (){
-              _launchURL;
+              //_launchURL;
+              Navigator.push(context, MaterialPageRoute(builder: (context) => InfoScreen()));
             },
           )
         ],
       ),
-      body: new Center(
-        child: new Image(image: AssetImage('assets/images/Logoprincipal.png')),
-        //MAPS
-      ),
+      body: GoogleMap(
+          // 2
+          initialCameraPosition: _myLocation,
+           // 3
+           mapType: MapType.normal,
+            // 4
+            onMapCreated: (GoogleMapController controller) {
+             _controller.complete(controller);
+      },
+    ),
     );
   }
   _launchURL() async {
@@ -136,6 +146,34 @@ class MapScreen extends StatelessWidget {
   }
 }
 
+class InfoScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      backgroundColor: Color(0xFFa5c9fd),
+      appBar: new AppBar(
+          title: new Text("Info screen"),
+          automaticallyImplyLeading: false
+      ),
+      body: ListView(
+          children: <Widget> [
+            Image(image: AssetImage('assets/images/Logoprincipal.png')),
+            RaisedButton(
+              onPressed: () {
+                /*Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SimScreen()),
+                );*/
+              },
+              child: const Text('Gov information page'),
+            )
+
+          ]
+      ),
+    );
+  }
+}
+
 class MapSampleState extends StatelessWidget {
   Completer<GoogleMapController> _controller = Completer();
 
@@ -144,11 +182,8 @@ class MapSampleState extends StatelessWidget {
     zoom: 14.4746,
   );
 
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+  static final CameraPosition _myLocation =
+  CameraPosition(target: LatLng(0, 0),);
 
   @override
   Widget build(BuildContext context) {
@@ -170,6 +205,6 @@ class MapSampleState extends StatelessWidget {
 
   Future<void> _goToTheLake() async {
     final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+    controller.animateCamera(CameraUpdate.newCameraPosition(_myLocation));
   }
 }
