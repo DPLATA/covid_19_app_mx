@@ -118,7 +118,6 @@ class MapScreen extends StatelessWidget {
                 color: Colors.white
             ),
             onPressed: (){
-              //_launchURL;
               Navigator.push(context, MaterialPageRoute(builder: (context) => InfoScreen()));
             },
           )
@@ -127,19 +126,19 @@ class MapScreen extends StatelessWidget {
       body: MapaGoogle()
     );
   }
-  _launchURL() async {
-    const url = 'https://flutter.dev';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 }
 
 class InfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    _launchURL() async {
+      const url = 'https://flutter.dev';
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    }
     return new Scaffold(
       backgroundColor: Color(0xFFa5c9fd),
       appBar: new AppBar(
@@ -151,10 +150,7 @@ class InfoScreen extends StatelessWidget {
             Image(image: AssetImage('assets/images/Logoprincipal.png')),
             RaisedButton(
               onPressed: () {
-                /*Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SimScreen()),
-                );*/
+                _launchURL();
               },
               child: const Text('Gov information page'),
             )
