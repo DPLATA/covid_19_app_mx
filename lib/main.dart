@@ -124,16 +124,7 @@ class MapScreen extends StatelessWidget {
           )
         ],
       ),
-      body: GoogleMap(
-          // 2
-          initialCameraPosition: _myLocation,
-           // 3
-           mapType: MapType.normal,
-            // 4
-            onMapCreated: (GoogleMapController controller) {
-             _controller.complete(controller);
-      },
-    ),
+      body: MapaGoogle()
     );
   }
   _launchURL() async {
@@ -174,37 +165,36 @@ class InfoScreen extends StatelessWidget {
   }
 }
 
-class MapSampleState extends StatelessWidget {
-  Completer<GoogleMapController> _controller = Completer();
+class _MapaGoogleState extends State<MapaGoogle> {
+  GoogleMapController mapController;
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
+  final LatLng _center = const LatLng(45.521563, -122.677433);
 
-  static final CameraPosition _myLocation =
-  CameraPosition(target: LatLng(0, 0),);
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      body: GoogleMap(
-        mapType: MapType.hybrid,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: Text('To the lake!'),
-        icon: Icon(Icons.directions_boat),
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('MAPA'),
+          backgroundColor: Colors.green[700],
+        ),
+        body: GoogleMap(
+          onMapCreated: _onMapCreated,
+          initialCameraPosition: CameraPosition(
+            target: _center,
+            zoom: 11.0,
+          ),
+        ),
       ),
     );
   }
+}
 
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_myLocation));
-  }
+class MapaGoogle extends StatefulWidget {
+  @override
+  _MapaGoogleState createState() => _MapaGoogleState();
 }
